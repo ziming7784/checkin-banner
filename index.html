@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Staff Check-in Banner</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Special+Elite&family=Cormorant+Garamond:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{ --paper:#EEE7D7; --paper-d:#DCD2BC; --ink:#17181C; --denim:#2F4F7F; --denim-l:#7E9BC0; }
+  *{box-sizing:border-box}
+  body{margin:0;background:#EEE7D7;font-family:"Cormorant Garamond",Georgia,serif}
+  .note{font:14px system-ui,sans-serif;background:#fff;padding:10px 14px;border-radius:8px;max-width:900px;line-height:1.5}
+
+  /* ===== banner ===== */
+  .banner{position:relative;width:900px;aspect-ratio:900/340;overflow:hidden;background:var(--paper);transform-origin:0 0;
+          }
+  /* city collage, washed into the paper */
+  .banner .city{position:absolute;inset:0;background:url(city.jpg) center 40%/cover;
+          filter:grayscale(.35) contrast(1.05);opacity:.55;mix-blend-mode:multiply}
+  /* paper grain over everything */
+  .grain{position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35  0 0 0 0 .30  0 0 0 0 .22  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+  .vignette{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 120px rgba(60,45,20,.35)}
+
+  /* denim strip on the left */
+  .denim{position:absolute;left:0;top:0;bottom:0;width:250px;background:url(denim.jpg) center/cover;
+         clip-path:polygon(0 0,100% 0,88% 18%,97% 40%,86% 63%,95% 82%,84% 100%,0 100%);
+         box-shadow:inset -8px 0 18px rgba(0,0,0,.25)}
+  .denim::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(23,24,28,.15),transparent)}
+
+  /* title block (on denim) */
+  .title{position:absolute;left:30px;top:34px;width:200px;color:#F4EFE3}
+  .title .kicker{font-family:"Special Elite",monospace;font-size:11px;letter-spacing:3px;opacity:.9}
+  .title h1{font-family:"Playfair Display",serif;font-weight:900;font-size:44px;line-height:.92;margin:10px 0 12px;
+            text-shadow:0 2px 0 rgba(0,0,0,.25)}
+  .title .rule{height:1px;background:rgba(244,239,227,.6);margin:0 0 10px}
+  .title p{margin:0;font-style:italic;font-size:17px;line-height:1.3}
+
+  /* eye-man collage cut-out */
+  .eye{position:absolute;left:300px;bottom:-6px;height:96%;aspect-ratio:900/1264;
+       background:url(suit-newspaper.jpg) center/cover;
+       -webkit-mask-image:radial-gradient(ellipse 46% 52% at 50% 52%,#000 72%,transparent 74%);
+               mask-image:radial-gradient(ellipse 46% 52% at 50% 52%,#000 72%,transparent 74%);
+       filter:sepia(.25) contrast(1.08);mix-blend-mode:multiply}
+
+  /* stamp */
+  .stamp{position:absolute;left:555px;top:26px;font-family:"Special Elite",monospace;color:var(--denim);
+         border:2px solid var(--denim);padding:6px 10px 5px;letter-spacing:2px;font-size:13px;transform:rotate(-7deg);
+         opacity:.85;box-shadow:inset 0 0 0 3px var(--paper),inset 0 0 0 4px var(--denim)}
+
+  /* ===== clock ===== */
+  .clock{position:absolute;left:560px;top:78px;width:170px;height:200px;filter:drop-shadow(6px 10px 10px rgba(0,0,0,.35))}
+  /* ===== calendar ===== */
+  .cal{position:absolute;right:28px;top:40px;width:140px;transform:rotate(4deg);filter:drop-shadow(5px 8px 8px rgba(0,0,0,.3))}
+  .cal .clip{height:14px;width:60px;margin:0 auto -6px;background:linear-gradient(#9aa0a8,#5f646b 60%,#8b9097);border-radius:3px;position:relative;z-index:2}
+  .cal .sheet{background:#F7F2E6;border:1px solid #cfc4ab;position:relative;overflow:hidden}
+  .cal .sheet::before{content:"";position:absolute;inset:0;opacity:.6;mix-blend-mode:multiply;background-image:inherit}
+  .cal .head{background:var(--denim);color:#F4EFE3;text-align:center;font-family:"Special Elite",monospace;letter-spacing:4px;font-size:12px;padding:8px 0 6px;
+             background-image:linear-gradient(rgba(47,79,127,.85),rgba(47,79,127,.85)),url(denim.jpg);background-size:cover}
+  .cal .day{font-family:"Playfair Display",serif;font-weight:900;font-size:76px;text-align:center;line-height:1;margin:8px 0 2px;color:var(--ink)}
+  .cal .wd{text-align:center;font-style:italic;font-size:17px;padding:4px 0 10px;border-top:1px solid #d8ccb2;margin:0 14px}
+  .cal .perf{height:8px;background:radial-gradient(circle at 4px 4px,#2a2b30 2px,transparent 2.5px) 0 0/10px 8px;opacity:.25}
+
+  .shake{animation:shake .7s ease-in-out}
+  @keyframes shake{0%,100%{transform:rotate(0)}15%{transform:rotate(-9deg)}30%{transform:rotate(8deg)}45%{transform:rotate(-6deg)}60%{transform:rotate(4deg)}75%{transform:rotate(-2deg)}}
+  .label{font:13px system-ui,sans-serif;color:#d9d9d9;width:900px;max-width:100%;margin:-12px 0 0}
+  .palette{display:flex;gap:8px;width:900px;max-width:100%}
+  .palette div{flex:1;height:44px;border-radius:4px;font:12px system-ui;display:flex;align-items:end;padding:5px;color:#fff}
+</style>
+</head>
+<body>
+
+<div class="banner">
+  <div class="city"></div>
+  <div class="eye"></div>
+  <div class="denim"></div>
+  <div class="title">
+    <div class="kicker">EST. 2026 · DAILY</div>
+    <h1>Staff<br>Check-in</h1>
+    <div class="rule"></div>
+    <p>Every task counts.<br>Every press pays.</p>
+  </div>
+  <div class="stamp">STAFF ONLY · NO. 001</div>
+
+  <!-- realistic vintage alarm clock -->
+  <svg class="clock" id="clock" viewBox="0 0 170 200" onclick="this.classList.remove('shake');void this.offsetWidth;this.classList.add('shake')" style="cursor:pointer">
+    <defs>
+      <radialGradient id="bell" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#d9dde3"/><stop offset=".35" stop-color="#8d939b"/><stop offset=".75" stop-color="#3a3e44"/><stop offset="1" stop-color="#1c1e22"/></radialGradient>
+      <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1f3f5"/><stop offset=".25" stop-color="#9aa0a7"/><stop offset=".5" stop-color="#e6e8eb"/><stop offset=".75" stop-color="#6c7178"/><stop offset="1" stop-color="#c9cdd2"/></linearGradient>
+      <radialGradient id="body" cx="40%" cy="35%" r="75%"><stop offset="0" stop-color="#3f6597"/><stop offset=".6" stop-color="#2F4F7F"/><stop offset="1" stop-color="#1a2d4a"/></radialGradient>
+      <radialGradient id="face" cx="45%" cy="40%" r="70%"><stop offset="0" stop-color="#FBF7EC"/><stop offset=".8" stop-color="#EDE4CE"/><stop offset="1" stop-color="#d6c9aa"/></radialGradient>
+      <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/></linearGradient>
+      <pattern id="dots" width="3" height="3" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r=".55" fill="#5a4a2a" opacity=".22"/></pattern>
+    </defs>
+    <!-- hammer + bells -->
+    <rect x="81" y="18" width="8" height="22" rx="2" fill="url(#rim)"/>
+    <circle cx="85" cy="16" r="5" fill="url(#rim)"/>
+    <g transform="rotate(-28 40 40)"><path d="M14 46 A26 24 0 0 1 66 46 Z" fill="url(#bell)"/><rect x="36" y="16" width="8" height="8" rx="2" fill="#6c7178"/></g>
+    <g transform="rotate(28 130 40)"><path d="M104 46 A26 24 0 0 1 156 46 Z" fill="url(#bell)"/><rect x="126" y="16" width="8" height="8" rx="2" fill="#6c7178"/></g>
+    <!-- legs -->
+    <path d="M42 168 L30 194" stroke="url(#rim)" stroke-width="7" stroke-linecap="round"/>
+    <path d="M128 168 L140 194" stroke="url(#rim)" stroke-width="7" stroke-linecap="round"/>
+    <!-- case -->
+    <circle cx="85" cy="112" r="70" fill="url(#body)"/>
+    <circle cx="85" cy="112" r="61" fill="url(#rim)"/>
+    <circle cx="85" cy="112" r="56" fill="url(#face)"/>
+    <circle cx="85" cy="112" r="56" fill="url(#dots)"/>
+    <circle cx="85" cy="112" r="49" fill="none" stroke="#2b2a26" stroke-width=".6" opacity=".6"/>
+    <g id="ticks"></g><g id="nums" font-family="Playfair Display, serif" font-weight="700" font-size="11" fill="#1d1c19" text-anchor="middle"></g>
+    <text x="85" y="141" text-anchor="middle" font-family="Special Elite, monospace" font-size="5.5" letter-spacing="1.5" fill="#2F4F7F">CHECK-IN · CO.</text>
+    <!-- hands -->
+    <path id="h" d="M85 112 L81.5 104 L85 80 L88.5 104 Z" fill="#17181C"/>
+    <path id="m" d="M85 112 L82.6 102 L85 66 L87.4 102 Z" fill="#17181C"/>
+    <g id="s"><line x1="85" y1="124" x2="85" y2="62" stroke="#2F4F7F" stroke-width="1.2"/><circle cx="85" cy="72" r="2.4" fill="none" stroke="#2F4F7F" stroke-width="1"/></g>
+    <circle cx="85" cy="112" r="3.6" fill="url(#rim)" stroke="#17181C" stroke-width=".8"/>
+    <!-- glass highlight -->
+    <ellipse cx="68" cy="92" rx="34" ry="22" fill="url(#glass)" transform="rotate(-30 68 92)"/>
+  </svg>
+
+  <!-- tear-off calendar -->
+  <div class="cal">
+    <div class="clip"></div>
+    <div class="sheet">
+      <div class="head" id="mon">NOV · 2026</div>
+      <div class="day" id="day">7</div>
+      <div class="wd" id="wd">Saturday</div>
+      <div class="perf"></div>
+    </div>
+  </div>
+
+  <div class="grain"></div><div class="vignette"></div>
+</div>
+
+<script>
+  const NS='http://www.w3.org/2000/svg',cx=85,cy=112;
+  const t=document.getElementById('ticks'),n=document.getElementById('nums');
+  for(let i=0;i<60;i++){const a=i*6*Math.PI/180,big=i%5===0,r1=52,r2=big?47.5:50;
+    const l=document.createElementNS(NS,'line');
+    l.setAttribute('x1',cx+r1*Math.sin(a));l.setAttribute('y1',cy-r1*Math.cos(a));
+    l.setAttribute('x2',cx+r2*Math.sin(a));l.setAttribute('y2',cy-r2*Math.cos(a));
+    l.setAttribute('stroke','#1d1c19');l.setAttribute('stroke-width',big?1.6:.6);t.appendChild(l);}
+  for(let i=1;i<=12;i++){const a=i*30*Math.PI/180,r=40;
+    const tx=document.createElementNS(NS,'text');tx.setAttribute('x',cx+r*Math.sin(a));tx.setAttribute('y',cy-r*Math.cos(a)+4);
+    tx.textContent=i;n.appendChild(tx);}
+  function tick(){const d=new Date(),s=d.getSeconds()+d.getMilliseconds()/1000,m=d.getMinutes()+s/60,h=(d.getHours()%12)+m/60;
+    document.getElementById('h').setAttribute('transform',`rotate(${h*30} ${cx} ${cy})`);
+    document.getElementById('m').setAttribute('transform',`rotate(${m*6} ${cx} ${cy})`);
+    document.getElementById('s').setAttribute('transform',`rotate(${Math.floor(s)*6} ${cx} ${cy})`);
+    document.getElementById('day').textContent=d.getDate();
+    document.getElementById('mon').textContent=d.toLocaleString('en',{month:'short'}).toUpperCase()+' · '+d.getFullYear();
+    document.getElementById('wd').textContent=d.toLocaleString('en',{weekday:'long'});}
+  tick();setInterval(tick,250);
+  function fit(){const b=document.querySelector(".banner"),k=window.innerWidth/900;b.style.transform="scale("+k+")";document.body.style.height=(340*k)+"px";document.body.style.overflow="hidden";}
+  fit();addEventListener("resize",fit);
+</script>
+</body>
+</html>
