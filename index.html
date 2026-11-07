@@ -136,7 +136,7 @@
       <circle cx="85" cy="112" r="47.5" fill="none" stroke="#2B4A78" stroke-width=".4"/>
       <circle cx="85" cy="112" r="22" fill="none" stroke="#2B4A78" stroke-width=".35" stroke-dasharray="1 1.6"/>
       <g id="ticks"></g>
-      <g id="nums" font-family="Playfair Display, serif" font-weight="700" font-size="9.5" fill="#2B4A78" text-anchor="middle"></g>
+      <g id="nums" font-family="Playfair Display, serif" font-weight="700" font-size="11" fill="#17181C" text-anchor="middle"></g>
       <text x="85" y="94" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="7.5" fill="#2B4A78">Garage Gazette</text>
       <text x="85" y="138" text-anchor="middle" font-family="Special Elite, monospace" font-size="4.6" letter-spacing="1.6" fill="#2F4F7F">EST · MMXXVI</text>
       <!-- Breguet-style hands -->
@@ -171,11 +171,11 @@
     l.setAttribute('x1',cx+r1*Math.sin(a));l.setAttribute('y1',cy-r1*Math.cos(a));
     l.setAttribute('x2',cx+r2*Math.sin(a));l.setAttribute('y2',cy-r2*Math.cos(a));
     l.setAttribute('stroke','#2B4A78');l.setAttribute('stroke-width',big?1.4:.5);t.appendChild(l);}
-  const RN=['XII','I','II','III','IIII','V','VI','VII','VIII','IX','X','XI'];
+  const RN=['12','1','2','3','4','5','6','7','8','9','10','11'];
   for(let i=0;i<12;i++){const a=i*30*Math.PI/180,r=40.5;
     const tx=document.createElementNS(NS,'text');const x=cx+r*Math.sin(a),y=cy-r*Math.cos(a);
     tx.setAttribute('x',x);tx.setAttribute('y',y+3.2);
-    tx.setAttribute('transform',`rotate(${i*30} ${x} ${y})`);tx.textContent=RN[i];n.appendChild(tx);}
+    tx.textContent=RN[i];n.appendChild(tx);}
   function tick(){const d=new Date(),s=d.getSeconds()+d.getMilliseconds()/1000,m=d.getMinutes()+s/60,h=(d.getHours()%12)+m/60;
     document.getElementById('h').setAttribute('transform',`rotate(${h*30} ${cx} ${cy})`);
     document.getElementById('m').setAttribute('transform',`rotate(${m*6} ${cx} ${cy})`);
