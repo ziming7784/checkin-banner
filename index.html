@@ -9,11 +9,12 @@
 <style>
   :root{ --paper:#EEE7D7; --paper-d:#DCD2BC; --ink:#17181C; --denim:#2F4F7F; --denim-l:#7E9BC0; }
   *{box-sizing:border-box}
-  body{margin:0;background:#EEE7D7;font-family:"Cormorant Garamond",Georgia,serif}
+  html,body{height:100%}
+  body{margin:0;overflow:hidden;background:#E6DCC6 radial-gradient(rgba(122,101,56,.14) .6px,transparent .7px) 0 0/3px 3px;font-family:"Cormorant Garamond",Georgia,serif}
   .note{font:14px system-ui,sans-serif;background:#fff;padding:10px 14px;border-radius:8px;max-width:900px;line-height:1.5}
 
   /* ===== banner ===== */
-  .banner{position:relative;width:900px;aspect-ratio:900/340;overflow:hidden;background:var(--paper);transform-origin:0 0;
+  .banner{position:absolute;width:900px;aspect-ratio:900/340;overflow:hidden;background:var(--paper);transform-origin:0 0;
           }
   /* city collage, washed into the paper */
   .banner .city{position:absolute;inset:0;background:url(city.jpg) center 40%/cover;
@@ -50,17 +51,20 @@
          opacity:.85;box-shadow:inset 0 0 0 3px var(--paper),inset 0 0 0 4px var(--denim)}
 
   /* ===== clock ===== */
-  .clock{position:absolute;left:560px;top:78px;width:170px;height:200px;filter:drop-shadow(6px 10px 10px rgba(0,0,0,.35))}
+  .clockwrap{position:absolute;left:536px;top:122px;width:178px;height:208px;transform:rotate(-4deg)}
+  .clock{width:100%;height:100%;filter:drop-shadow(2px 3px 1.5px rgba(40,30,15,.35)) drop-shadow(0 0 .5px rgba(0,0,0,.2))}
+  .tape{position:absolute;left:58px;top:-6px;width:64px;height:20px;transform:rotate(-8deg);
+        background:rgba(238,226,196,.72);box-shadow:0 1px 2px rgba(0,0,0,.15);
+        clip-path:polygon(3% 0,97% 4%,100% 50%,96% 100%,2% 96%,0 45%);mix-blend-mode:multiply}
   /* ===== calendar ===== */
-  .cal{position:absolute;right:28px;top:40px;width:140px;transform:rotate(4deg);filter:drop-shadow(5px 8px 8px rgba(0,0,0,.3))}
-  .cal .clip{height:14px;width:60px;margin:0 auto -6px;background:linear-gradient(#9aa0a8,#5f646b 60%,#8b9097);border-radius:3px;position:relative;z-index:2}
-  .cal .sheet{background:#F7F2E6;border:1px solid #cfc4ab;position:relative;overflow:hidden}
+  .cal{position:absolute;right:30px;top:46px;width:136px;transform:rotate(4deg);filter:drop-shadow(2px 3px 1.5px rgba(40,30,15,.35)) drop-shadow(0 0 .5px rgba(0,0,0,.2))}
+  .cal .clip{position:absolute;left:36px;top:-9px;width:64px;height:20px;transform:rotate(5deg);z-index:3;background:rgba(238,226,196,.72);box-shadow:0 1px 2px rgba(0,0,0,.15);clip-path:polygon(3% 0,97% 4%,100% 50%,96% 100%,2% 96%,0 45%);mix-blend-mode:multiply}
+  .cal .sheet{background:#F3ECDA;border:5px solid #F6F0E2;outline:1px solid rgba(120,100,60,.18);position:relative;overflow:hidden;background-image:radial-gradient(rgba(122,101,56,.16) .5px,transparent .6px);background-size:3px 3px}
   .cal .sheet::before{content:"";position:absolute;inset:0;opacity:.6;mix-blend-mode:multiply;background-image:inherit}
-  .cal .head{background:var(--denim);color:#F4EFE3;text-align:center;font-family:"Special Elite",monospace;letter-spacing:4px;font-size:12px;padding:8px 0 6px;
-             background-image:linear-gradient(rgba(47,79,127,.85),rgba(47,79,127,.85)),url(denim.jpg);background-size:cover}
-  .cal .day{font-family:"Playfair Display",serif;font-weight:900;font-size:76px;text-align:center;line-height:1;margin:8px 0 2px;color:var(--ink)}
-  .cal .wd{text-align:center;font-style:italic;font-size:17px;padding:4px 0 10px;border-top:1px solid #d8ccb2;margin:0 14px}
-  .cal .perf{height:8px;background:radial-gradient(circle at 4px 4px,#2a2b30 2px,transparent 2.5px) 0 0/10px 8px;opacity:.25}
+  .cal .head{background:#2B4A78;color:#F3ECDA;text-align:center;font-family:"Special Elite",monospace;letter-spacing:4px;font-size:12px;padding:7px 0 5px;border-bottom:2px solid #F3ECDA;box-shadow:0 2px 0 #2B4A78}
+  .cal .day{font-family:"Playfair Display",serif;font-weight:900;font-size:76px;text-align:center;line-height:1;margin:8px 0 2px;color:#2B4A78}
+  .cal .wd{text-align:center;font-style:italic;font-size:17px;padding:4px 0 9px;border-top:1px solid rgba(43,74,120,.45);margin:0 14px;color:#2B4A78}
+  .cal .perf{height:7px;background:radial-gradient(circle at 4px 3.5px,#F6F0E2 1.8px,transparent 2.2px) 0 0/9px 7px,#2B4A78;opacity:.85}
 
   .shake{animation:shake .7s ease-in-out}
   @keyframes shake{0%,100%{transform:rotate(0)}15%{transform:rotate(-9deg)}30%{transform:rotate(8deg)}45%{transform:rotate(-6deg)}60%{transform:rotate(4deg)}75%{transform:rotate(-2deg)}}
@@ -76,47 +80,74 @@
   <div class="eye"></div>
   <div class="denim"></div>
   <div class="title">
-    <div class="kicker">EST. 2026 · STAFF ONLY</div>
-    <h1>Staff<br>Check-in</h1>
+    <div class="kicker">EST. 2026 · EXTRA!</div>
+    <h1>Garage<br>Gazette</h1>
     <div class="rule"></div>
     <p>Every task counts.<br>Every press pays.</p>
   </div>
-  <div class="stamp">THE DAILY · NO. 001</div>
+  <div class="stamp">VOL. 1 · NO. 001</div>
 
-  <!-- realistic vintage alarm clock -->
+  <!-- paper cut-out vintage clock (printed look, taped on) -->
+  <div class="clockwrap">
   <svg class="clock" id="clock" viewBox="0 0 170 200" onclick="this.classList.remove('shake');void this.offsetWidth;this.classList.add('shake')" style="cursor:pointer">
     <defs>
-      <radialGradient id="bell" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#d9dde3"/><stop offset=".35" stop-color="#8d939b"/><stop offset=".75" stop-color="#3a3e44"/><stop offset="1" stop-color="#1c1e22"/></radialGradient>
-      <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1f3f5"/><stop offset=".25" stop-color="#9aa0a7"/><stop offset=".5" stop-color="#e6e8eb"/><stop offset=".75" stop-color="#6c7178"/><stop offset="1" stop-color="#c9cdd2"/></linearGradient>
-      <radialGradient id="body" cx="40%" cy="35%" r="75%"><stop offset="0" stop-color="#3f6597"/><stop offset=".6" stop-color="#2F4F7F"/><stop offset="1" stop-color="#1a2d4a"/></radialGradient>
-      <radialGradient id="face" cx="45%" cy="40%" r="70%"><stop offset="0" stop-color="#FBF7EC"/><stop offset=".8" stop-color="#EDE4CE"/><stop offset="1" stop-color="#d6c9aa"/></radialGradient>
-      <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/></linearGradient>
-      <pattern id="dots" width="3" height="3" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r=".55" fill="#5a4a2a" opacity=".22"/></pattern>
+      <!-- white paper margin around the cut-out -->
+      <filter id="cut" x="-10%" y="-10%" width="120%" height="120%">
+        <feMorphology in="SourceAlpha" operator="dilate" radius="4.5" result="d"/>
+        <feFlood flood-color="#F6F0E2"/><feComposite in2="d" operator="in" result="paper"/>
+        <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" result="n"/>
+        <feColorMatrix in="n" values="0 0 0 0 .45  0 0 0 0 .38  0 0 0 0 .25  0 0 0 .25 0" result="g"/>
+        <feComposite in="g" in2="d" operator="in" result="grain"/>
+        <feMerge><feMergeNode in="paper"/><feMergeNode in="grain"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <!-- slightly rough printed ink -->
+      <filter id="ink"><feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" result="t"/>
+        <feDisplacementMap in="SourceGraphic" in2="t" scale="1.1"/></filter>
+      <pattern id="half" width="2.6" height="2.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="1.3" cy="1.3" r=".75" fill="#2B4A78"/></pattern>
+      <pattern id="halfL" width="2.6" height="2.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="1.3" cy="1.3" r=".45" fill="#2B4A78"/></pattern>
+      <pattern id="age" width="3" height="3" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r=".5" fill="#7a6538" opacity=".18"/></pattern>
     </defs>
-    <!-- hammer + bells -->
-    <rect x="81" y="18" width="8" height="22" rx="2" fill="url(#rim)"/>
-    <circle cx="85" cy="16" r="5" fill="url(#rim)"/>
-    <g transform="rotate(-28 40 40)"><path d="M14 46 A26 24 0 0 1 66 46 Z" fill="url(#bell)"/><rect x="36" y="16" width="8" height="8" rx="2" fill="#6c7178"/></g>
-    <g transform="rotate(28 130 40)"><path d="M104 46 A26 24 0 0 1 156 46 Z" fill="url(#bell)"/><rect x="126" y="16" width="8" height="8" rx="2" fill="#6c7178"/></g>
-    <!-- legs -->
-    <path d="M42 168 L30 194" stroke="url(#rim)" stroke-width="7" stroke-linecap="round"/>
-    <path d="M128 168 L140 194" stroke="url(#rim)" stroke-width="7" stroke-linecap="round"/>
-    <!-- case -->
-    <circle cx="85" cy="112" r="70" fill="url(#body)"/>
-    <circle cx="85" cy="112" r="61" fill="url(#rim)"/>
-    <circle cx="85" cy="112" r="56" fill="url(#face)"/>
-    <circle cx="85" cy="112" r="56" fill="url(#dots)"/>
-    <circle cx="85" cy="112" r="49" fill="none" stroke="#2b2a26" stroke-width=".6" opacity=".6"/>
-    <g id="ticks"></g><g id="nums" font-family="Playfair Display, serif" font-weight="700" font-size="11" fill="#1d1c19" text-anchor="middle"></g>
-    <text x="85" y="141" text-anchor="middle" font-family="Special Elite, monospace" font-size="5.5" letter-spacing="1.5" fill="#2F4F7F">CHECK-IN · CO.</text>
-    <!-- hands -->
-    <path id="h" d="M85 112 L81.5 104 L85 80 L88.5 104 Z" fill="#17181C"/>
-    <path id="m" d="M85 112 L82.6 102 L85 66 L87.4 102 Z" fill="#17181C"/>
-    <g id="s"><line x1="85" y1="124" x2="85" y2="62" stroke="#2F4F7F" stroke-width="1.2"/><circle cx="85" cy="72" r="2.4" fill="none" stroke="#2F4F7F" stroke-width="1"/></g>
-    <circle cx="85" cy="112" r="3.6" fill="url(#rim)" stroke="#17181C" stroke-width=".8"/>
-    <!-- glass highlight -->
-    <ellipse cx="68" cy="92" rx="34" ry="22" fill="url(#glass)" transform="rotate(-30 68 92)"/>
+    <g filter="url(#cut)"><g filter="url(#ink)">
+      <!-- legs -->
+      <path d="M46 166 L34 192 L42 192 L54 170 Z" fill="#2B4A78"/>
+      <path d="M124 166 L136 192 L128 192 L116 170 Z" fill="#2B4A78"/>
+      <!-- bells: flat ink with halftone shading -->
+      <g transform="rotate(-26 40 42)">
+        <path d="M13 48 Q14 20 40 18 Q66 20 67 48 Z" fill="#2B4A78"/>
+        <path d="M20 44 Q22 26 38 23" fill="none" stroke="#EFE6D0" stroke-width="2.4" stroke-linecap="round" opacity=".85"/>
+        <rect x="37" y="11" width="6" height="8" fill="#2B4A78"/>
+      </g>
+      <g transform="rotate(26 130 42)">
+        <path d="M103 48 Q104 20 130 18 Q156 20 157 48 Z" fill="#2B4A78"/>
+        <path d="M110 44 Q112 26 128 23" fill="none" stroke="#EFE6D0" stroke-width="2.4" stroke-linecap="round" opacity=".85"/>
+        <rect x="127" y="11" width="6" height="8" fill="#2B4A78"/>
+      </g>
+      <!-- hammer -->
+      <path d="M83 26 L87 26 L87 44 L83 44 Z" fill="#2B4A78"/><circle cx="85" cy="23" r="4.5" fill="#2B4A78"/>
+      <!-- case: solid ink ring + halftone shading -->
+      <circle cx="85" cy="112" r="70" fill="#2B4A78"/>
+      <circle cx="85" cy="112" r="64" fill="#EFE6D0"/>
+      <circle cx="85" cy="112" r="64" fill="url(#halfL)" opacity=".35"/>
+      <circle cx="85" cy="112" r="60" fill="#F3ECDA"/>
+      <circle cx="85" cy="112" r="60" fill="url(#age)"/>
+      <!-- engraved rings -->
+      <circle cx="85" cy="112" r="57" fill="none" stroke="#2B4A78" stroke-width="1.4"/>
+      <circle cx="85" cy="112" r="55" fill="none" stroke="#2B4A78" stroke-width=".4"/>
+      <circle cx="85" cy="112" r="47.5" fill="none" stroke="#2B4A78" stroke-width=".4"/>
+      <circle cx="85" cy="112" r="22" fill="none" stroke="#2B4A78" stroke-width=".35" stroke-dasharray="1 1.6"/>
+      <g id="ticks"></g>
+      <g id="nums" font-family="Playfair Display, serif" font-weight="700" font-size="9.5" fill="#2B4A78" text-anchor="middle"></g>
+      <text x="85" y="94" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="7.5" fill="#2B4A78">Garage Gazette</text>
+      <text x="85" y="138" text-anchor="middle" font-family="Special Elite, monospace" font-size="4.6" letter-spacing="1.6" fill="#2F4F7F">EST · MMXXVI</text>
+      <!-- Breguet-style hands -->
+      <g id="h"><path d="M84.2 116 L84.2 98 L85.8 98 L85.8 116 Z" fill="#2B4A78"/><circle cx="85" cy="93" r="4.2" fill="none" stroke="#2B4A78" stroke-width="1.6"/><path d="M85 88.8 L83.4 84 L85 80 L86.6 84 Z" fill="#2B4A78"/></g>
+      <g id="m"><path d="M84.4 118 L84.4 82 L85.6 82 L85.6 118 Z" fill="#2B4A78"/><circle cx="85" cy="78" r="3.4" fill="none" stroke="#2B4A78" stroke-width="1.3"/><path d="M85 74.6 L83.8 70 L85 64 L86.2 70 Z" fill="#2B4A78"/></g>
+      <g id="s"><line x1="85" y1="126" x2="85" y2="62" stroke="#17181C" stroke-width=".8"/><circle cx="85" cy="122" r="2" fill="#17181C"/></g>
+      <circle cx="85" cy="112" r="2.6" fill="#2B4A78"/><circle cx="85" cy="112" r="1" fill="#EFE6D0"/>
+    </g></g>
   </svg>
+  <div class="tape"></div>
+  </div>
 
   <!-- tear-off calendar -->
   <div class="cal">
@@ -135,14 +166,16 @@
 <script>
   const NS='http://www.w3.org/2000/svg',cx=85,cy=112;
   const t=document.getElementById('ticks'),n=document.getElementById('nums');
-  for(let i=0;i<60;i++){const a=i*6*Math.PI/180,big=i%5===0,r1=52,r2=big?47.5:50;
+  for(let i=0;i<60;i++){const a=i*6*Math.PI/180,big=i%5===0,r1=55,r2=big?50.5:52.5;
     const l=document.createElementNS(NS,'line');
     l.setAttribute('x1',cx+r1*Math.sin(a));l.setAttribute('y1',cy-r1*Math.cos(a));
     l.setAttribute('x2',cx+r2*Math.sin(a));l.setAttribute('y2',cy-r2*Math.cos(a));
-    l.setAttribute('stroke','#1d1c19');l.setAttribute('stroke-width',big?1.6:.6);t.appendChild(l);}
-  for(let i=1;i<=12;i++){const a=i*30*Math.PI/180,r=40;
-    const tx=document.createElementNS(NS,'text');tx.setAttribute('x',cx+r*Math.sin(a));tx.setAttribute('y',cy-r*Math.cos(a)+4);
-    tx.textContent=i;n.appendChild(tx);}
+    l.setAttribute('stroke','#2B4A78');l.setAttribute('stroke-width',big?1.4:.5);t.appendChild(l);}
+  const RN=['XII','I','II','III','IIII','V','VI','VII','VIII','IX','X','XI'];
+  for(let i=0;i<12;i++){const a=i*30*Math.PI/180,r=40.5;
+    const tx=document.createElementNS(NS,'text');const x=cx+r*Math.sin(a),y=cy-r*Math.cos(a);
+    tx.setAttribute('x',x);tx.setAttribute('y',y+3.2);
+    tx.setAttribute('transform',`rotate(${i*30} ${x} ${y})`);tx.textContent=RN[i];n.appendChild(tx);}
   function tick(){const d=new Date(),s=d.getSeconds()+d.getMilliseconds()/1000,m=d.getMinutes()+s/60,h=(d.getHours()%12)+m/60;
     document.getElementById('h').setAttribute('transform',`rotate(${h*30} ${cx} ${cy})`);
     document.getElementById('m').setAttribute('transform',`rotate(${m*6} ${cx} ${cy})`);
@@ -151,7 +184,8 @@
     document.getElementById('mon').textContent=d.toLocaleString('en',{month:'short'}).toUpperCase()+' · '+d.getFullYear();
     document.getElementById('wd').textContent=d.toLocaleString('en',{weekday:'long'});}
   tick();setInterval(tick,250);
-  function fit(){const b=document.querySelector(".banner"),k=window.innerWidth/900;b.style.transform="scale("+k+")";document.body.style.height=(340*k)+"px";document.body.style.overflow="hidden";}
+  function fit(){const b=document.querySelector(".banner"),W=innerWidth,H=innerHeight||340,k=Math.min(W/900,H/340);
+    b.style.transform="scale("+k+")";b.style.left=((W-900*k)/2)+"px";b.style.top=((H-340*k)/2)+"px";}
   fit();addEventListener("resize",fit);
 </script>
 </body>
